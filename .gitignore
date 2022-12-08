@@ -1,3 +1,4 @@
 *.bup
 /data
 /docs
+**/.vscode
