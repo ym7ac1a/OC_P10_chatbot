@@ -2,7 +2,7 @@
 
 This is the project architecture in production :
 
-![center-img h:450px](https://user.oc-static.com/upload/2019/10/24/15719…e%CC%81cran%202019-10-24%20a%CC%80%2014.14.41.png)
+![center-img h:450px](media/flyeme.png)
 
 Repository of OpenClassrooms' AI Engineer path, project #10 .
 
