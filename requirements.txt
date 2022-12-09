@@ -1,5 +1,8 @@
+azure.cognitiveservices.language.luis
 ipykernel
 ipython
+jupyter
 matplotlib
+msrest
 numpy
 pandas
