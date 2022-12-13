@@ -1,4 +1,8 @@
 *.bup
+*.AppImage
 /data
 /docs
 **/.vscode
+**__pycache__
+bot/first_bot
+notebooks/luis_bup.ipynb
