@@ -7,7 +7,7 @@ import json
 
 
 if __name__ == '__main__':
-    APP_ID = "5e02b817-af9a-4335-892a-3b9acc444e45"
+    APP_ID = "1158aee4-d5f2-4e67-ba0b-323dff6fe6a2"
     AZURE_LUIS_PRED_ENDPOINT = \
         "https://flyme-luis-resource.cognitiveservices.azure.com/" + \
         f"luis/prediction/v3.0/apps/{APP_ID}/" + \
