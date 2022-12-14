@@ -1,10 +1,6 @@
 # Fly Me : flights booking chatbot
 
-This is the project architecture in production :
-
 ![center-img h:450px](media/flyeme.png)
-
-Repository of OpenClassrooms' AI Engineer path, project #10 .
 
 Goal : use **Azure Cognitive Services (LUIS)**, **Azure Web App** and **Azure Application Insights**, to build a flights booking chatbot, integrate it in a web application, and monitor its quality.
 
