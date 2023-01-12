@@ -2,7 +2,6 @@ azure.cognitiveservices.language.luis
 ipykernel
 ipython
 jupyter
-libsecret-1-dev
 matplotlib
 msrest
 numpy
