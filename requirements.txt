@@ -6,3 +6,4 @@ matplotlib
 msrest
 numpy
 pandas
+tqdm

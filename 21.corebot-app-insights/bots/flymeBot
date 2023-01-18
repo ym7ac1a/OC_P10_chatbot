@@ -1,0 +1,18 @@
+{
+    "name": "flymeBot",
+    "description": "",
+    "services": [
+        {
+            "type": "endpoint",
+            "name": "http://localhost:3978/api/messages",
+            "id": "cbc474f0-95c1-11ed-afee-81dc50a7edbb",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0",
+    "path": "/home/yo/Documents/OpenClassrooms/P10_chatbot/21.corebot-app-insights/bots/flymeBot",
+    "overrides": null
+}

@@ -14,7 +14,7 @@ from azure.cognitiveservices.language.luis.authoring.models import (
 )
 
 from msrest.authentication import CognitiveServicesCredentials
-from tqdm.notebook import tqdm_notebook as tqdm
+from tqdm import tqdm
 
 
 def add_client_app(endpoint, key, project_name):
@@ -226,7 +226,7 @@ def test_luis_app(luis_endpoint, app_id, luis_key, query):
         f"?verbose=true&show-all-intents=true&log=true" + \
         f"&subscription-key={luis_key}" + \
         f"&query={query}"
-
+    print(req_url)
     pred = requests.get(req_url).json()
     print(json.dumps(pred, indent=4))
 
@@ -236,14 +236,12 @@ def main():
     AZURE_LUIS_ENDPOINT = \
         "https://flymeluisresource-authoring.cognitiveservices.azure.com/"
     AZURE_LUIS_KEY = "8ad33ca9a5fb49589908dcede8f780b5"
-    AZURE_LUIS_PROJECT_NAME = "flyme-luis-app-new_env"
+    AZURE_LUIS_PROJECT_NAME = "flyme-luis-app-test"
     AZURE_LUIS_PROJECT_VERSION = "0.1"
-
-    #AZURE_PRED_KEY = "df63ca72a8894564a8bb8602771b30ad"
 
     DATA_PATH = Path("./data")
     FRAMES_JSON_PATH = Path(DATA_PATH, "raw/frames.json")
-
+    
     client, app_id = add_client_app(
         AZURE_LUIS_ENDPOINT, AZURE_LUIS_KEY, AZURE_LUIS_PROJECT_NAME)
 
@@ -259,11 +257,11 @@ def main():
     train_flyme_data(client, app_id, AZURE_LUIS_PROJECT_VERSION)
     
     publish_app(client, app_id, AZURE_LUIS_PROJECT_VERSION)
-
+    
     query = "I want to book a trip from Paris to London for less than $100. " +\
         "I will leave on the first of January 2023 " + \
         "and come back on the 17th of january 2023."
-    test_luis_app(AZURE_LUIS_ENDPOINT, app_id, AZURE_LUIS_KEY, query)
+    test_luis_app(AZURE_LUIS_ENDPOINT, "d008c5e2-b0c9-4c5d-92f6-262897bdc0ac", AZURE_LUIS_KEY, query)
 
 
 if __name__== '__main__':
