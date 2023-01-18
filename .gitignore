@@ -6,4 +6,5 @@
 bot/first_bot
 notebooks/luis_bup.ipynb
 **__pycache__
-integration_support
+/from_attempt_1
+../.azure
