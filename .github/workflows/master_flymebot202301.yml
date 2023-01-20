@@ -10,26 +10,60 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
 
-    - name: Set up Python version
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.8'
-    
-    - name: Build using AppService-Build
-      uses: azure/appservice-build@v2
-      with:
-        platform: python
-        platform-version: '3.8'
-    
-    - name: 'Deploy to Azure Web App'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: 'flymebot202301'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_86ba4ea3a3b049b2bb271aaf26d72ca4 }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        
+      - name: Run unit tests
+        env: 
+          MicrosoftAppId: ${{ secrets.APP_ID }}
+          MicrosoftAppPassword: ${{ secrets.APP_PASSWORD }}
+          LuisAPPId: ${{ secrets.LUIS_APP_ID }}
+          LuisAPIKey: ${{ secrets.LUIS_API_KEY }}
+          LuisAPIHostName: ${{ secrets.LUIS_API_HOST_NAME }}
+          InstrumentationKey: ${{ secrets.APPINSIGHTS_INSTRUMENTATION_KEY }}
+        run: python test_prog.py
+      
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-app
+          path: |
+            . 
+            !venv/
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: python-app
+          path: .
+          
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: 'flymebot202301'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
