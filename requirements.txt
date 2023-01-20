@@ -22,7 +22,7 @@ click==8.0.4
 cryptography==3.4.8
 datatypes-date-time==1.0.0a2
 datedelta==1.4
-Django
+Django==2.2.28
 djangorestframework==3.10.3
 emoji==1.6.3
 Flask==1.1.1
