@@ -21,3 +21,11 @@ This is the project architecture:
     -   Azure Application Insights: monitor the quality of the bot
 
 ---
+
+## Install
+
+```sh
+conda create -n flyme python=3.8 -y
+conda activate flyme
+pip install -r requirements.txt
+```

@@ -1,10 +1,13 @@
 *.bup
 *.AppImage
+/.azure
 /data
 /docs
-**/.vscode
-bot/first_bot
-notebooks/luis_bup.ipynb
+/.vscode
+/notebooks
 **__pycache__
 /from_attempt_1
-../.azure
+/deploymentTemplates
+makefile.md
+flymebotym
+.luisrc
