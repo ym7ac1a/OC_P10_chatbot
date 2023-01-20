@@ -16,6 +16,7 @@ from botbuilder.core import (
     BotFrameworkAdapterSettings,
     ConversationState,
     MemoryStorage,
+    TelemetryLoggerMiddleware,
     UserState,
 )
 from botbuilder.core.integration import aiohttp_error_middleware
@@ -60,8 +61,8 @@ TELEMETRY_CLIENT = ApplicationInsightsTelemetryClient(
 ) # type: ignore
 
 # Code for enabling activity and personal information logging.
-# TELEMETRY_LOGGER_MIDDLEWARE = TelemetryLoggerMiddleware(telemetry_client=TELEMETRY_CLIENT, log_personal_information=True)
-# ADAPTER.use(TELEMETRY_LOGGER_MIDDLEWARE)
+TELEMETRY_LOGGER_MIDDLEWARE = TelemetryLoggerMiddleware(telemetry_client=TELEMETRY_CLIENT, log_personal_information=True)
+ADAPTER.use(TELEMETRY_LOGGER_MIDDLEWARE)
 
 # Create dialogs and Bot
 RECOGNIZER = FlightBookingRecognizer(CONFIG)
@@ -93,9 +94,10 @@ def init_func(argv):
     return APP
 
 if __name__ == "__main__":
+    print("Starting bot...")
     APP = init_func(None)
 
     try:
-        web.run_app(APP, host="localhost", port=CONFIG.PORT)
+        web.run_app(APP, host="0.0.0.0", port=CONFIG.PORT)
     except Exception as error:
         raise error
