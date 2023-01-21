@@ -1,14 +1,11 @@
 *.bup
-*.AppImage
 /.azure
 /data
 /docs
 /.vscode
 /notebooks
 **__pycache__
-/from_attempt_1
 /deploymentTemplates
 makefile.md
-flymebotym
 .luisrc
-flymebot2023
+/env
