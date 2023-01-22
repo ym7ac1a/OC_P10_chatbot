@@ -17,7 +17,7 @@ from botbuilder.schema import InputHints
 
 from booking_details import BookingDetails
 from flight_booking_recognizer import FlightBookingRecognizer
-from helpers.luis_helper import LuisHelper, Intent
+from helpers.luis_helper import LuisHelper, LuisConstants
 from .booking_dialog import BookingDialog
 
 
@@ -86,7 +86,7 @@ class MainDialog(ComponentDialog):
             self._luis_recognizer, step_context.context
         )
 
-        if intent == Intent.BOOK_FLIGHT.value and luis_result:
+        if intent == LuisConstants.NOT_NONE_INTENTS and luis_result:
             # Run the BookingDialog giving it whatever details we have from the LUIS call.
             return await step_context.begin_dialog(self._booking_dialog_id, luis_result)
 
