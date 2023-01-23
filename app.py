@@ -57,7 +57,7 @@ INSTRUMENTATION_KEY = CONFIG.APPINSIGHTS_INSTRUMENTATION_KEY
 TELEMETRY_CLIENT = ApplicationInsightsTelemetryClient(
     INSTRUMENTATION_KEY,
     telemetry_processor=AiohttpTelemetryProcessor(),
-    client_queue_size=10,
+    client_queue_size=1,
 ) # type: ignore
 
 # Code for enabling activity and personal information logging.

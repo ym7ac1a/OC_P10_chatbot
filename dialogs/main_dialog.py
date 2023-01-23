@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
+from typing import Final
 
 from botbuilder.dialogs import (
     ComponentDialog,
@@ -22,6 +23,8 @@ from .booking_dialog import BookingDialog
 
 
 class MainDialog(ComponentDialog):
+    INITIAL_DIALOG_ID: Final[str] = "MainDialog"
+
     def __init__(
         self,
         luis_recognizer: FlightBookingRecognizer,
@@ -37,7 +40,8 @@ class MainDialog(ComponentDialog):
         booking_dialog.telemetry_client = self.telemetry_client
 
         wf_dialog = WaterfallDialog(
-            "WFDialog", [self.intro_step, self.act_step, self.final_step]
+            MainDialog.INITIAL_DIALOG_ID,
+            [self.intro_step, self.act_step, self.final_step],
         )
         wf_dialog.telemetry_client = self.telemetry_client
 
@@ -48,13 +52,16 @@ class MainDialog(ComponentDialog):
         self.add_dialog(booking_dialog)
         self.add_dialog(wf_dialog)
 
-        self.initial_dialog_id = "WFDialog"
+        self.initial_dialog_id = MainDialog.INITIAL_DIALOG_ID
 
-    async def intro_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
+    async def intro_step(
+        self, step_context: WaterfallStepContext
+    ) -> DialogTurnResult:
         if not self._luis_recognizer.is_configured:
             await step_context.context.send_activity(
                 MessageFactory.text(
-                    "NOTE: LUIS is not configured. To enable all capabilities, add 'LuisAPPId', 'LuisAPIKey' and "
+                    "NOTE: LUIS is not configured. To enable all capabilities, "
+                    "add 'LuisAPPId', 'LuisAPIKey' and "
                     "'LuisAPIHostName' to env variables.",
                     input_hint=InputHints.ignoring_input,
                 )
@@ -63,8 +70,8 @@ class MainDialog(ComponentDialog):
             return await step_context.next(None)
         message_text = (
             str(step_context.options)
-            if step_context.options
-            else "What can I do for you today ?"
+            if hasattr(step_context, "options") and step_context.options is not None
+            else "Hello ! What could I help you with today ?"
         )
         prompt_message = MessageFactory.text(
             message_text, message_text, InputHints.expecting_input
@@ -85,8 +92,9 @@ class MainDialog(ComponentDialog):
         intent, luis_result = await LuisHelper.execute_luis_query(
             self._luis_recognizer, step_context.context
         )
-
-        if intent == LuisConstants.NOT_NONE_INTENTS and luis_result:
+        print(f"intent: {intent}")
+        print(f"luis_result: {luis_result}")
+        if intent in LuisConstants.NOT_NONE_INTENTS and luis_result is not None:
             # Run the BookingDialog giving it whatever details we have from the LUIS call.
             return await step_context.begin_dialog(self._booking_dialog_id, luis_result)
 
@@ -112,9 +120,15 @@ class MainDialog(ComponentDialog):
             # If the call to the booking service was successful tell the user.
             # time_property = Timex(result.travel_date)
             # travel_date_msg = time_property.to_natural_language(datetime.now())
-            msg_txt = f"I have you booked to {result.destination} from {result.origin} on {result.start_travel_date}. You are coming back on: { result.return_travel_date } and I respected your budget of: { result.budget }"
+            """msg_txt = (
+                f"I have you booked to {result.destination} from {result.origin} "
+                f"on {result.start_travel_date}. You are coming back on: "
+                f"{ result.return_travel_date } and I respected your budget of:"
+                f" { result.budget }"
+            )"""
+            msg_txt = "Alright, enjoy your trip 🥳"
             message = MessageFactory.text(msg_txt, msg_txt, InputHints.ignoring_input)
             await step_context.context.send_activity(message)
 
-        prompt_message = "What else can I do for you?"
+        prompt_message = "OK, want to book another trip ? 🤩"
         return await step_context.replace_dialog(self.id, prompt_message)

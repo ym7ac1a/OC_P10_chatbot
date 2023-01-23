@@ -11,6 +11,8 @@ on:
 
 jobs:
   build:
+    environment:
+      name: 'Production'
     runs-on: ubuntu-latest
     
     steps:
@@ -36,7 +38,7 @@ jobs:
         LuisAPPId: ${{ secrets.LUIS_APP_ID }}
         LuisAPIKey: ${{ secrets.LUIS_API_KEY }}
         LuisAPIHostName: ${{ secrets.LUIS_API_HOST_NAME }}
-        InstrumentationKey: ${{ secrets.APPINSIGHTS_INSTRUMENTATION_KEY }}
+        AppInsightsInstrumentationKey: ${{ secrets.APPINSIGHTS_INSTRUMENTATION_KEY }}
       run: python test_prog.py
     
     - name: Upload artifact for deployment jobs
