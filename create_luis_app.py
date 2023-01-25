@@ -41,7 +41,7 @@ def booking_app(subscription_key):
 
         print("\nWe'll add the intent 'book' and 5 entities ['or_city', 'dst_city', 'str_date', 'end_date', 'budget']")
 
-        client.model.add_intent(app_id, version_id, 'book')
+        client.model.add_intent(app_id, version_id, 'Book')
         print("intent created")
 
         client.model.add_entity(app_id, version_id, name="or_city")

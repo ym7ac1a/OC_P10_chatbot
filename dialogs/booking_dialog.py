@@ -102,6 +102,8 @@ class BookingDialog(CancelAndHelpDialog):
                 DateResolverDialog.START_DATE_DIALOG_ID,
                 booking_details.str_date,
             )
+        
+        return await step_context.next(booking_details.str_date)
 
     async def return_travel_date_step(
         self, step_context: WaterfallStepContext
@@ -168,8 +170,8 @@ Please confirm your trip details :
         if step_context.result:
             self.telemetry_client.track_trace(
                 "BOOKING ACCEPTED",
-                booking_details.__dict__,
-                "INFO"
+                properties=booking_details.__dict__,
+                severity=1
             )
             return await step_context.end_dialog(booking_details)
         
@@ -180,9 +182,10 @@ Please confirm your trip details :
             await step_context.context.send_activity(prompt_sorry_msg)
             
             self.telemetry_client.track_trace(
-                "BOOKING PREDICTION ERROR",
-                booking_details.__dict__,
-                "ERROR"
+                "BOOKING REFUSED",
+                properties=booking_details.__dict__,
+                #step_context._stack,
+                severity=3
             )
         return await step_context.end_dialog()
     
