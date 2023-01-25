@@ -6,7 +6,7 @@ async-timeout==3.0.1
 attrs==21.4.0
 azure-cognitiveservices-language-luis==0.2.0
 azure-common==1.1.28
-Babel>=2.9.1
+Babel==2.7.0
 botbuilder-ai==4.14.1
 botbuilder-applicationinsights==4.14.1
 botbuilder-core==4.14.1
@@ -15,7 +15,7 @@ botbuilder-integration-applicationinsights-aiohttp==4.14.1
 botbuilder-schema==4.14.1
 botframework-connector==4.14.1
 botframework-streaming==4.14.1
-certifi>=2022.12.07
+certifi==2021.10.8
 cffi==1.15.0
 chardet==3.0.4
 click==8.0.4
@@ -23,7 +23,7 @@ cryptography==3.4.8
 datatypes-date-time==1.0.0a2
 datedelta==1.4
 Django
-djangorestframework>=3.11.2
+djangorestframework==3.10.3
 emoji==1.6.3
 Flask==1.1.1
 gh==0.0.4
@@ -42,8 +42,8 @@ msrest==0.6.10
 msrestazure==0.6.4
 multidict==6.0.2
 multipledispatch==0.6.0
-numpy>=1.22
-oauthlib>=3.2.1
+numpy==1.21.5
+oauthlib==3.2.0
 packaging==21.3
 pluggy==1.0.0
 py==1.11.0
@@ -67,7 +67,7 @@ sqlparse==0.4.2
 tomli==2.0.1
 tqdm==4.63.0
 typing_extensions==4.1.1
-urllib3>=1.26.5
+urllib3>=1.25.11
 Werkzeug==2.0.3
 yarl==1.7.2
 zipp==3.7.0
