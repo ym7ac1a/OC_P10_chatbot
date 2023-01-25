@@ -53,7 +53,7 @@ class LuisRecognizerTest(AsyncTestCase):
         self.assertIsNotNone(result.query)
         self.assertEqual(utterance, result.query)
         self.assertIsNotNone(result.top_scoring_intent.intent)
-        self.assertEqual("book", result.top_scoring_intent.intent)
+        self.assertEqual("Book", result.top_scoring_intent.intent)
         self.assertIsNotNone(result.entities)
         self.assertEqual("budget", result.entities[0].type)
         self.assertEqual("2100 $ .", result.entities[0].entity)
