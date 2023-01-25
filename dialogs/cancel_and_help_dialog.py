@@ -58,6 +58,11 @@ Ex. : _'I want to travel for $500'_
                 return DialogTurnResult(DialogTurnStatus.Waiting)
 
             if text in ("cancel", "quit"):
+                self.telemetry_client.track_trace(
+                    "BOOKING CANCELLED",
+                    booking_details.__dict__,
+                    "WARNING"
+                )
                 await inner_dc.context.send_activity(
                     "It's OK to change your mind 🧘")
                 return await inner_dc.cancel_all_dialogs()

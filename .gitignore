@@ -4,8 +4,9 @@
 /docs
 /.vscode
 /notebooks
+/scripts/export_env_var.sh
 **__pycache__
 /deploymentTemplates
 makefile.md
 .luisrc
-/env
+/venv*

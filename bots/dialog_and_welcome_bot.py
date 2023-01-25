@@ -40,9 +40,11 @@ class DialogAndWelcomeBot(DialogBot):
             # To learn more about Adaptive Cards, see https://aka.ms/msbot-adaptivecards
             # for more details.
             if member.id != turn_context.activity.recipient.id:
-                welcome_card = self.create_adaptive_card_attachment()
-                response = self.create_response(turn_context.activity, welcome_card)
-                await turn_context.send_activity(response)
+                # welcome_card = self.create_adaptive_card_attachment()
+                # response = self.create_response(turn_context.activity, welcome_card)
+                alt_text = "🥳 Hello 🥳"
+                alt_response = create_activity_reply(turn_context.activity, text=alt_text)
+                await turn_context.send_activity(alt_response)
 
     def create_response(self, activity: Activity, attachment: Attachment):
         """Create an attachment message response."""

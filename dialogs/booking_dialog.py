@@ -9,7 +9,7 @@ from botbuilder.core import MessageFactory, BotTelemetryClient, NullTelemetryCli
 
 from .cancel_and_help_dialog import CancelAndHelpDialog
 from .date_resolver_dialog import DateResolverDialog
-
+from datatypes_date_time.timex import Timex
 
 class BookingDialog(CancelAndHelpDialog):
     """Flight booking implementation."""
@@ -144,12 +144,6 @@ class BookingDialog(CancelAndHelpDialog):
 
         # Capture the results of the previous step
         booking_details.budget = step_context.result
-        """msg = (
-            f"Please confirm, I have you traveling to: { booking_details.destination }"
-            f" from: { booking_details.origin } on: { booking_details.start_travel_date}."
-            f" You plan to have a return trip on: { booking_details.return_travel_date }"
-            f" and your budget is: { booking_details.budget }$"
-        )"""
         msg = f"""
 Please confirm your trip details :
 - 🛫 from : **{ booking_details.or_city }**
@@ -180,12 +174,19 @@ Please confirm your trip details :
             return await step_context.end_dialog(booking_details)
         
         else:
-            sorry_msg = "I'm sorry, hope to see you soon"
-            prompt_sorry_msg = MessageFactory.text(sorry_msg, sorry_msg, InputHints.ignoring_input)
+            sorry_msg = "I'm sorry, hope to see you soon!"
+            prompt_sorry_msg = MessageFactory.text(
+                sorry_msg, sorry_msg, InputHints.ignoring_input)
             await step_context.context.send_activity(prompt_sorry_msg)
             
             self.telemetry_client.track_trace(
                 "BOOKING PREDICTION ERROR",
                 booking_details.__dict__,
-                "ERROR")
+                "ERROR"
+            )
         return await step_context.end_dialog()
+    
+    def is_ambiguous(self, timex: str) -> bool:
+        """Ensure time is correct."""
+        timex_property = Timex(timex)
+        return "definite" not in timex_property.types

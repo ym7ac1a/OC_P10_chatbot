@@ -61,8 +61,8 @@ class DateResolverDialog(CancelAndHelpDialog):
             prompt_msg = "On what date would you like to travel?"
 
         reprompt_msg = (
-            "I'm sorry, for best results, please enter your travel "
-            "date including the month, day and year."
+            "Sorry, I didn't get it, please enter a date "
+            "like 'January 30th, 2023' or '01-30-2023'"
         )
 
         if timex is None:
@@ -79,7 +79,8 @@ class DateResolverDialog(CancelAndHelpDialog):
         if "definite" in Timex(timex).types:
             # This is essentially a "reprompt" of the data we were given up front.
             return await step_context.prompt(
-                DateTimePrompt.__name__, PromptOptions(prompt=reprompt_msg)
+                DateTimePrompt.__name__,
+                PromptOptions(prompt=reprompt_msg)
             )
 
         return await step_context.next(DateTimeResolution(timex=timex))

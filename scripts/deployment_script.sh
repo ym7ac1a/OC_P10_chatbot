@@ -86,15 +86,16 @@ echo "done"
 
 # App service, Webapp and bot
 # Registration
-MicrosoftAppPassword="la-velo-est-bleu"
+read -s -p 'Define your Microsoft App Passwords (please be careful to remember it) :' -r MicrosoftAppPassword
 export MicrosoftAppPassword
+
 echo "App registration..."
 az ad app create \
-     --display-name "flymebot202301" \
+     --display-name "flymebot2101" \
      --output none
 echo "done"
 echo "MicrosoftAppId export..."
-MicrosoftAppId=$(az ad app list --display-name flymebot202301 | grep -o -P -- '"appId": "\K.{36}')
+MicrosoftAppId=$(az ad app list --display-name flymebot2101 | grep -o -P -- '"appId": "\K.{36}')
 export MicrosoftAppId
 echo "done"
 
@@ -113,8 +114,8 @@ echo "web app creation..."
 az webapp create \
      -g botrg \
      -p flymebotserviceplan \
-     -n flymebot202301 \
-     --runtime "python:3.8" \
+     -n flymebot2101 \
+     --runtime "python:3.9" \
      --output none
 echo "done"
 
@@ -122,13 +123,13 @@ echo "done"
 # App insights
 echo "App Insights creation..."
 az monitor app-insights component create \
-     --app luis-follow \
+     --app luis-app-ins \
      --location $ma_localisation \
      --kind web \
      -g botrg \
      --application-type web \
      --output none
-InstrumentationKey=$(az monitor app-insights component show --app luis-follow --resource-group botrg --query instrumentationKey -o tsv)
+InstrumentationKey=$(az monitor app-insights component show --app luis-app-ins --resource-group botrg --query instrumentationKey -o tsv)
 echo "InstrumentationKey:"
 echo $InstrumentationKey
 export InstrumentationKey
@@ -138,7 +139,7 @@ echo "done"
 echo "App Insights API Key creation..."
 AI_API_KEY=$(az monitor app-insights api-key create \
     --api-key cle_bot \
-    --app luis-follow \
+    --app luis-app-ins \
     -g botrg \
     --read-properties ReadTelemetry \
     --query apiKey \
@@ -148,7 +149,7 @@ echo $AI_API_KEY
 export AI_API_KEY
 
 AI_APP_ID=$(az monitor app-insights component show \
-    --app luis-follow \
+    --app luis-app-ins \
     --resource-group botrg \
     --query appId \
     -o tsv)
@@ -158,32 +159,32 @@ export AI_APP_ID
 echo "done"
 
 #Bot creation
-echo "Bot creation..."
-az bot create \
-    --appid $MicrosoftAppId \
-    --app-type "MultiTenant" \
-    --name flymebotym \
-    --resource-group botrg \
-    --endpoint "https://flymebot202301.azurewebsites.net/api/messages" \
-    --output none
-echo "done"
+#echo "Bot creation..."
+#az bot create \
+#    --appid $MicrosoftAppId \
+#    --app-type "MultiTenant" \
+#    --name flymebotym \
+#    --resource-group botrg \
+#    --endpoint "https://flymebot202101.azurewebsites.net/api/messages" \
+#    --output none
+#echo "done"
 
 #Link between bot and app insights
-echo "Bot telemetry settings update..."
-az bot update \
-    -n flymebotym \
-    -g botrg \
-    --ai-app-id $AI_APP_ID \
-    --ai-api-key $AI_API_KEY \
-    --ai-key $InstrumentationKey \
-    --output none
-echo "done"
+#echo "Bot telemetry settings update..."
+#az bot update \
+#    -n flymebotym \
+#    -g botrg \
+#    --ai-app-id $AI_APP_ID \
+#    --ai-api-key $AI_API_KEY \
+#    --ai-key $InstrumentationKey \
+#    --output none
+#echo "done"
 
 #Deployment
 # Web App config
 echo "Web app settings update..."
 az webapp config appsettings set \
-      -n flymebot202301 \
+      -n flymebot2101 \
       -g botrg \
       --settings InstrumentationKey=$InstrumentationKey \
                   LuisAPPId=$LuisAPPId \
@@ -196,7 +197,7 @@ az webapp config appsettings set \
       --output none
 
 az webapp config set \
-     -n flymebot202301 \
+     -n flymebot2101 \
      -g botrg \
      --startup-file="python3.8 -m aiohttp.web -H 0.0.0.0 -P 8000 app:init_func" \
      --output none
@@ -209,7 +210,7 @@ gh secret set APP_ID --body $MicrosoftAppId \
             --repo "ym7ac1a/P10_chatbot"
 gh secret set APP_PASSWORD --body $MicrosoftAppPassword \
             --repo "ym7ac1a/P10_chatbot"
-gh secret set LUIS_APP_ID --body $LuisAPPId \
+gh secret set LUIS_APP_ID --body $LuisAppId \
             --repo "ym7ac1a/P10_chatbot"
 gh secret set LUIS_API_KEY --body $LuisAPIKey \
             --repo "ym7ac1a/P10_chatbot"
@@ -227,7 +228,7 @@ echo "git hub actions definition..."
 az webapp deployment github-actions add \
       --repo "ym7ac1a/P10_chatbot" \
       -g botrg \
-      -n flymebot202301 \
+      -n flymebot2101 \
       -b master \
       --token $github_access_token
 
@@ -237,7 +238,7 @@ sleep 5
 echo "Publish profile update..."
 gh secret set AZURE_WEBAPP_PUBLISH_PROFILE \
        --body "$(az webapp deployment list-publishing-profiles \
-       --name flymebot202301 \
+       --name flymebot2101 \
        --resource-group botrg \
        --xml)" \
        --repo "ym7ac1a/P10_chatbot"
