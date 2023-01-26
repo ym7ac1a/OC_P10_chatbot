@@ -58,7 +58,7 @@ class LuisHelper:
         Returns an object with preformatted LUIS results for the bot's dialogs to consume.
         """
         intent = None
-        result = None
+        result = BookingDetails()
 
         try:
             recognizer_result = await luis_recognizer.recognize(turn_context)

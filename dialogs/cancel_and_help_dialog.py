@@ -3,6 +3,7 @@
 """Handle cancel and help intents."""
 
 from botbuilder.core import BotTelemetryClient, NullTelemetryClient
+from botbuilder.core.bot_telemetry_client import Severity
 from botbuilder.dialogs import (
     ComponentDialog,
     DialogContext,
@@ -45,22 +46,28 @@ class CancelAndHelpDialog(ComponentDialog):
             text = inner_dc.context.activity.text.lower()
 
             if text in ("help", "?"):
+                self.telemetry_client.track_trace(
+                    "ASKED FOR HELP",
+                    severity="WARNING"
+                )
                 await inner_dc.context.send_activity(
                     """
-🏙️ Just tell me **where** you want to travel to (cities of origin and destination).
+Just tell me
+- 🏙️ **Where** you want to travel to (cities of origin and destination).
 Ex. : _'I want to travel from Seattle to San Francisco'_
-📅 I will also need to know **when** you want to travel (dates of departure and return).
+- 📅 **When** you want to travel (dates of departure and return).
 Ex. : _'I want to travel on May 1, 2020 and return on May 5, 2020'_
-💸 Finally, you can give me a **budget** for your trip.
+- 💸 **How much** is your budget for this trip.
 Ex. : _'I want to travel for $500'_
-🪃 We can sart over from scratch anytime if you just say _'Cancel'_"""
+
+Send **Cancel** to start over"""
                 )
                 return DialogTurnResult(DialogTurnStatus.Waiting)
 
             if text in ("cancel", "quit"):
                 self.telemetry_client.track_trace(
                     "BOOKING CANCELLED",
-                    severity=2,
+                    severity="WARNING"   # Severity.WARNING.name
                 )
                 await inner_dc.context.send_activity(
                     "It's OK to change your mind 🧘")

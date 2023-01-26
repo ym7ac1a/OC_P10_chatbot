@@ -11,6 +11,8 @@ from botbuilder.core import (
     TurnContext,
 )
 from botbuilder.schema import ActivityTypes, Activity
+from botbuilder.core import BotTelemetryClient, NullTelemetryClient
+from botbuilder.core.bot_telemetry_client import Severity
 
 
 class AdapterWithErrorHandler(BotFrameworkAdapter):
@@ -18,18 +20,21 @@ class AdapterWithErrorHandler(BotFrameworkAdapter):
         self,
         settings: BotFrameworkAdapterSettings,
         conversation_state: ConversationState,
+        telemetry_client: BotTelemetryClient = NullTelemetryClient(),
     ):
         super().__init__(settings)
         self._conversation_state = conversation_state
+        self.telemetry_client = telemetry_client
 
         # Catch-all for errors.
         async def on_error(context: TurnContext, error: Exception):
             # This check writes out errors to console log
             # NOTE: In production environment, you should consider logging this to Azure
             #       application insights.
-            print(f"\n [on_turn_error] unhandled error: {error}", file=sys.stderr)
-            traceback.print_exc()
 
+            print(f"\n [on_turn_error] unhandled error: {error}", file=sys.stderr)
+            traceback.print_exc()            
+            
             # Send a message to the user
             await context.send_activity("The bot encountered an error or bug.")
             await context.send_activity(
@@ -51,6 +56,12 @@ class AdapterWithErrorHandler(BotFrameworkAdapter):
 
             # Clear out state
             nonlocal self
+            self.telemetry_client.track_trace(
+                "CODE ERROR",
+                properties="on_turn_error unhandled error",
+                severity="CRITICAL"
+            )
+            self.telemetry_client.track_exception(value=error)
             await self._conversation_state.delete(context)
 
         self.on_turn_error = on_error

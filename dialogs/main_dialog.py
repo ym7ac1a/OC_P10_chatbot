@@ -96,7 +96,7 @@ class MainDialog(ComponentDialog):
         )
         print(f"intent: {intent}")
         print(f"luis_result: {luis_result}")
-        if intent in LuisConstants.BOOK_INTENT: # .NOT_NONE_INTENTS and luis_result is not None:
+        if intent in LuisConstants.BOOK_INTENT and luis_result:
             # Run the BookingDialog giving it whatever details we have from the LUIS call.
             return await step_context.begin_dialog(self._booking_dialog_id, luis_result)
 

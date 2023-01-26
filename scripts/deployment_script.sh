@@ -199,7 +199,7 @@ az webapp config appsettings set \
 az webapp config set \
      -n flymebot2101 \
      -g botrg \
-     --startup-file="python3.8 -m aiohttp.web -H 0.0.0.0 -P 8000 app:init_func" \
+     --startup-file="python3.9 -m aiohttp.web -H 0.0.0.0 -P 8000 app:init_func" \
      --output none
 echo "done"
 

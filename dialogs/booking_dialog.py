@@ -3,9 +3,12 @@
 """Flight booking dialog."""
 
 from botbuilder.dialogs import WaterfallDialog, WaterfallStepContext, DialogTurnResult
-from botbuilder.dialogs.prompts import ConfirmPrompt, TextPrompt, PromptOptions
+from botbuilder.dialogs.prompts import ConfirmPrompt, TextPrompt, \
+    PromptOptions, NumberPrompt
 from botbuilder.schema import InputHints
-from botbuilder.core import MessageFactory, BotTelemetryClient, NullTelemetryClient
+from botbuilder.core import MessageFactory, BotTelemetryClient, \
+    NullTelemetryClient
+from botbuilder.core.bot_telemetry_client import Severity
 
 from .cancel_and_help_dialog import CancelAndHelpDialog
 from .date_resolver_dialog import DateResolverDialog
@@ -41,6 +44,7 @@ class BookingDialog(CancelAndHelpDialog):
         waterfall_dialog.telemetry_client = telemetry_client
 
         self.add_dialog(text_prompt)
+        self.add_dialog(NumberPrompt(NumberPrompt.__name__))
         self.add_dialog(ConfirmPrompt(ConfirmPrompt.__name__))
         self.add_dialog(waterfall_dialog)
 
@@ -125,15 +129,18 @@ class BookingDialog(CancelAndHelpDialog):
     async def budget_step(self, step_context: WaterfallStepContext) -> DialogTurnResult:
         """Prompt for trip budget."""
         booking_details = step_context.options
-
+        
         # Capture the response to the previous step's prompt
         booking_details.end_date = step_context.result
+
         if booking_details.budget is None:
             return await step_context.prompt(
                 TextPrompt.__name__,
                 PromptOptions(
-                    prompt=MessageFactory.text("What is your budget for this trip?")
-                ),
+                    prompt=MessageFactory.text(
+                        "💸 How much money can you afford ($) ?"
+                    )
+                )                    
             )  # pylint: disable=line-too-long,bad-continuation
 
         return await step_context.next(booking_details.budget)
@@ -152,7 +159,8 @@ Please confirm your trip details :
 - 🛬 to : **{ booking_details.dst_city }**
 - 🥳 departure date : **{ booking_details.str_date }**
 - 😮‍💨 return date : **{ booking_details.end_date }**
-- 💸 for a budget of : **{ booking_details.budget }**"""
+- 💸 for a budget of : **{ booking_details.budget }** $
+"""
 
         # Offer a YES/NO prompt.
         return await step_context.prompt(
@@ -171,7 +179,7 @@ Please confirm your trip details :
             self.telemetry_client.track_trace(
                 "BOOKING ACCEPTED",
                 properties=booking_details.__dict__,
-                severity=1
+                severity="INFO"
             )
             return await step_context.end_dialog(booking_details)
         
@@ -184,8 +192,7 @@ Please confirm your trip details :
             self.telemetry_client.track_trace(
                 "BOOKING REFUSED",
                 properties=booking_details.__dict__,
-                #step_context._stack,
-                severity=3
+                severity="ERROR"
             )
         return await step_context.end_dialog()
     
