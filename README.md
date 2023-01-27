@@ -2,7 +2,7 @@
 
 ![center-img h:450px](media/flyeme.png)
 
-Goal : use **Azure Cognitive Services (LUIS)**, **Azure Web App** and **Azure Application Insights**, to build a flights booking chatbot, integrate it in a web application, and monitor its quality.
+Goal : use **Azure Cognitive Services (LUIS)**, **Azure Web App** and **Azure Application Insights**, to build a flight booking chatbot, integrated in a web application, and monitor its quality.
 
 This is the project architecture:
 
@@ -13,7 +13,7 @@ This is the project architecture:
 -   [x] Integrate model output into a finished product :
     -   Azure Language Understanding - LUIS: train and setup a dedicated language understanding model
     -   Azure App Service: deploy an interactive API
-    -   Azure Bot: test the bot in a web chat
+    -   Azure Bot: test the bot locally from Bot Framework Emulator
 -   [x] Integrate an AI processing chain into an IT tool using a code version management tool :
     -   GitHub repository: manage the code
     -   Automated tests: test the bot
