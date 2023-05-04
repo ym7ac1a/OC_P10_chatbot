@@ -25,7 +25,7 @@ datedelta==1.4
 Django
 djangorestframework==3.10.3
 emoji==1.6.3
-Flask==1.1.1
+Flask==2.2.5
 gh==0.0.4
 grapheme==0.6.0
 idna==2.10
